@@ -17,16 +17,14 @@ const Simulator = new class {
 				let index = x + y * World.width;
 				let wallIndex = xi + yi * (World.width + 2);
 
-				console.log('calc', x, y, WallArr[wallIndex]);
 				PGradGrid[xi][yi] = 
-									// ((PArr[index - World.width] || 0) + (PArr[index + World.width] || 0)) / 2 + 
-										// * WallArr[wallIndex - World.width - 2] y* WallArr[wallIndex + World.width + 2];
-									((PArr[index - 1] || 0) + (PArr[index + 1] || 0)) / 2 
+									((PArr[index + World.width] || 0) - (PArr[index - World.width] || 0)) / 2
+										* WallArr[wallIndex - World.width - 2] * WallArr[wallIndex + World.width + 2] +  
+									((PArr[index + 1] || 0) - (PArr[index - 1] || 0)) / 2 
 										* WallArr[wallIndex - 1] * WallArr[wallIndex + 1];
 			}
-
 		}
-
+		// console.table(PGradGrid)
 
 		let newPGrid = createGrid(World.width, World.height, 0);
 		for (let x = 0; x < World.width; x++)
@@ -36,12 +34,15 @@ const Simulator = new class {
 			{
 				let yi = y + 1 
 				let D = 1
-				let grad = 	(PGradGrid[xi - 1][yi] + PGradGrid[xi + 1][yi]) / 2 + 
-						 	(PGradGrid[xi][yi - 1] + PGradGrid[xi][yi + 1]) / 2
-				newPGrid[x][y] = grad * D * _dt
+				let grad = 	(PGradGrid[xi + 1][yi] - PGradGrid[xi - 1][yi]) / 2 +
+							(PGradGrid[xi][yi + 1] - PGradGrid[xi][yi - 1]) / 2
+				// console.log(x, y, grad, PGradGrid[xi - 1][yi], PGradGrid[xi + 1][yi])
+				newPGrid[x][y] = _PGrid[x][y] + grad * D * _dt
 			}
 		}
-		console.table(newPGrid)
+		// console.table(_PGrid);
+		// console.log('--->')
+		// console.table(newPGrid)
 
 		return newPGrid;
 	}

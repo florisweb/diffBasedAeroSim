@@ -5,7 +5,7 @@ function createGrid(_width, _height, _defaultValue = 0) {
 		grid[x] = []
 		for (let y = 0; y < _height; y++)
 		{
-			grid[x][y] = x + y * _width;//_defaultValue
+			grid[x][y] = _defaultValue
 		}
 	}
 	return grid;
@@ -18,7 +18,7 @@ function createWorld(_width, _height, _defaultValue = 0) {
 		grid[x] = []
 		for (let y = 0; y < _height; y++)
 		{
-			grid[x][y] = Math.round(Math.random() * 10)
+			grid[x][y] = Math.ceil(Math.random() * 10);
 		}
 	}
 	return grid;
@@ -67,8 +67,8 @@ function gridToArr(_grid) {
 
 
 const World = new class {
-	width = 3;
-	height = 1;
+	width = 5;
+	height = 5;
 	grid = []
 	wallGrid = [];
 
@@ -79,13 +79,16 @@ const World = new class {
 
 
 	update() {
-		this.grid = Simulator.update(this.grid, this.wallGrid, 1);
+		console.table(this.grid);
+		console.log('--->')
+		for (let i = 0; i < 1000; i++) this.grid = Simulator.update(this.grid, this.wallGrid, .01);
+		console.table(this.grid)
 
 	}
 
 }
 
-// World.update();
+World.update();
 
 
 
